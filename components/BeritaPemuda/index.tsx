@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
-import Config from "@/app/config/config";
+import Config from "@/lib/config";
 import axios from "axios";
 import Image from "next/image";
 

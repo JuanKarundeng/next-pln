@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Config from "@/app/config/config";
+import Config from "@/lib/config";
 import Image from "next/image";
 
 const ProgramOlahraga = () => {

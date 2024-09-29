@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import axios from "axios";
 import React, { useState } from "react";
-import Config from "@/app/config/config";
+import Config from "@/lib/config";
 import Image from "next/image";
 
 const Galeri = () => {
