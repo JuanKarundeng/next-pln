@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Config from "@/app/config/config";
 import axios from "axios";
+import Image from "next/image";
 
 const BeritaOlahraga = () => {
   const [judulBerita, setJudulBerita] = useState("");
@@ -105,7 +106,9 @@ const BeritaOlahraga = () => {
                 onChange={loadImage}
                 className="block w-full py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
               />
-              {preview && <img src={preview} alt="Preview" className="mt-4" />}
+              {preview && (
+                <Image src={preview} alt="Preview" className="mt-4" />
+              )}
             </div>
 
             <div className="mb-7">

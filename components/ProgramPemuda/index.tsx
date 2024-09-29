@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Config from "@/app/config/config";
+import Image from "next/image";
 
 const ProgramPemuda = () => {
   const [title, setTitle] = useState("");
@@ -96,7 +97,7 @@ const ProgramPemuda = () => {
                   className="block w-full py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
                 />
                 {preview && (
-                  <img src={preview} alt="Preview" className="mt-4" />
+                  <Image src={preview} alt="Preview" className="mt-4" />
                 )}
               </div>
 
