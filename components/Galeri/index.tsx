@@ -5,17 +5,19 @@ import React, { useState } from "react";
 import Config from "@/app/config/config";
 
 const Galeri = () => {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
 
   const [openModal, setOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState(""); // Untuk pesan modal
   const [isSuccess, setIsSuccess] = useState(false); // Untuk mengatur status keberhasilan
 
-  const loadImage = async (e) => {
-    const gambar = e.target.files[0];
-    setFile(gambar);
-    setPreview(URL.createObjectURL(gambar));
+  const loadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const gambar = e.target.files?.[0]; // ?. digunakan untuk memastikan file ada
+    if (gambar) {
+      setFile(gambar);
+      setPreview(URL.createObjectURL(gambar));
+    }
   };
 
   const resetForm = () => {
@@ -23,7 +25,7 @@ const Galeri = () => {
     setPreview("");
   };
 
-  const sendData = async (e) => {
+  const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!file) {
@@ -143,7 +145,7 @@ const Galeri = () => {
             {/* Modal */}
             <div
               id="popup-modal"
-              tabIndex="-1"
+              tabIndex={-1}
               className="fixed inset-0 z-50 flex justify-center items-center p-4 overflow-x-hidden overflow-y-auto h-[calc(100%-1rem)] max-h-full"
             >
               <div className="relative w-full max-w-md">

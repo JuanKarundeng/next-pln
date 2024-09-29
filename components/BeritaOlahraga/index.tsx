@@ -9,17 +9,20 @@ const BeritaOlahraga = () => {
   const [namaPembuatBerita, setNamaPembuatBerita] = useState("");
   const [isiBerita, setIsiBerita] = useState("");
   const [tanggalBerita, setTanggalBerita] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
+
   const [preview, setPreview] = useState("");
 
   const [openModal, setOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const loadImage = (e) => {
-    const image = e.target.files[0];
-    setFile(image);
-    setPreview(URL.createObjectURL(image));
+  const loadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target.files?.[0]; // ?. digunakan untuk memastikan file ada
+    if (image) {
+      setFile(image);
+      setPreview(URL.createObjectURL(image));
+    }
   };
 
   const resetForm = () => {
@@ -31,7 +34,7 @@ const BeritaOlahraga = () => {
     setPreview("");
   };
 
-  const saveBerita = async (e) => {
+  const saveBerita = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
@@ -172,7 +175,7 @@ const BeritaOlahraga = () => {
             {/* Modal */}
             <div
               id="popup-modal"
-              tabIndex="-1"
+              tabIndex={-1}
               className="fixed inset-0 z-50 flex justify-center items-center p-4 overflow-x-hidden overflow-y-auto h-[calc(100%-1rem)] max-h-full"
             >
               <div className="relative w-full max-w-md">

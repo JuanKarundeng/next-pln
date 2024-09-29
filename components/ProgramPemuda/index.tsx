@@ -6,7 +6,7 @@ import Config from "@/app/config/config";
 
 const ProgramPemuda = () => {
   const [title, setTitle] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [admin, setAdmin] = useState("");
   const [kontak, setKontak] = useState("");
   const [preview, setPreview] = useState("");
@@ -14,10 +14,12 @@ const ProgramPemuda = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const loadImage = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    setPreview(URL.createObjectURL(selectedFile));
+  const loadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]; // ?. digunakan untuk memastikan file ada
+    if (selectedFile) {
+      setFile(selectedFile);
+      setPreview(URL.createObjectURL(selectedFile));
+    }
   };
 
   const resetForm = () => {
@@ -28,7 +30,7 @@ const ProgramPemuda = () => {
     setPreview("");
   };
 
-  const saveGambar = async (e) => {
+  const saveGambar = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!title || !file || !admin || !kontak) {
