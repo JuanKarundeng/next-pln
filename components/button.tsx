@@ -10,7 +10,7 @@ export const LoginButton = () => {
       disabled={pending}
       className="w-full text-white bg-blue-700 font-medium rounded-lg px-5 py-2.5 text-center uppercase hover:bg-blue-800"
     >
-      {pending ? "Authenticating..." : "Sign In"}
+      {pending ? "Authenticating..." : "Masuk"}
     </button>
   );
 };
@@ -23,7 +23,7 @@ export const RegisterButton = () => {
       disabled={pending}
       className="w-full text-white bg-blue-700 font-medium rounded-lg px-5 py-2.5 text-center uppercase hover:bg-blue-800"
     >
-      {pending ? "Registering..." : "Register"}
+      {pending ? "Registering..." : "Daftar"}
     </button>
   );
 };

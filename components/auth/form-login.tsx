@@ -28,7 +28,7 @@ const FormLogin = () => {
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Masukkan Email"
           className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg w-full p-2.5"
         />
         <div aria-live="polite" aria-atomic="true">
@@ -42,7 +42,7 @@ const FormLogin = () => {
           htmlFor="password"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
-          Password
+          Kata Sandi
         </label>
         <input
           type="password"
@@ -59,11 +59,10 @@ const FormLogin = () => {
 
       <LoginButton />
 
-      <p className="text-sm font-light text-gray-500">
-        Don&apos;t have an account yet?
+      <p className="text-sm font-light text-center text-gray-500">
         <Link href="/register">
           <span className="font-medium pl-1 text-blue-600 hover:text-blue-700">
-            Sign Up here
+            Tambahkan akun
           </span>
         </Link>
       </p>

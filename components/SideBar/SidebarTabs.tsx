@@ -20,8 +20,8 @@ const SidebarTabs = ({ tabs, onSelect }: SidebarTabsProps) => {
           <button
             className={`flex w-full rounded-sm px-3 py-2 text-base ${
               activeTab === tab.href
-                ? " text-black hover:bg-gray-400 duration-300  "
-                : "text-black hover:bg-gray-400 duration-300"
+                ? " text-black hover:bg-[#ADD8E6] duration-300  "
+                : "text-black hover:bg-[#ADD8E6] duration-300"
             }`}
             onClick={() => handleTabClick(tab.href)}
           >

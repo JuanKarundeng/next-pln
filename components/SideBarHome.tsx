@@ -1,40 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth, signOut } from "@/auth";
-import { ul } from "framer-motion/client";
 
-const Navbar = async () => {
+const SideBarHome = async () => {
   const session = await auth();
 
   return (
     <nav className="bg-[#ADD8E6] border-gray-200 border-b">
-      <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
-        <Link href="/">
-          <div className="flex justify-between items-center">
-            {" "}
-            <Image
-              src="/bumn.png"
-              alt="logo"
-              width={120}
-              height={100}
-              priority
-              className="h-[120px]"
-            />
-          </div>
-        </Link>
+      <div className="max-w-screen-xl flex flex-col items-center justify-between mx-auto p-4">
         <div className="flex items-center gap-3">
-          <ul className="hidden md:flex items-center gap-4 mr-5 font-semibold text-gray-600 hover:text-gray-800">
+          <ul className="hidden  items-center gap-4 mr-5 font-semibold text-gray-600 hover:text-gray-800">
+            <li>
+              <Link href="/">Home</Link>
+            </li>
             {session && (
               <>
+                <li>
+                  <Link href="/dashboard">Dashboard</Link>
+                </li>
                 {session.user.role === "admin" ? (
-                  <ul className="flex gap-4">
-                    <li>
-                      <Link href="/dashboard">Beranda</Link>
-                    </li>
-                    <li>
-                      <Link href="/kelola-akun">Kelola Akun</Link>
-                    </li>
-                  </ul>
+                  <li>
+                    <Link href="/user">Users</Link>
+                  </li>
                 ) : null}
               </>
             )}
@@ -67,7 +54,7 @@ const Navbar = async () => {
             <form
               action={async () => {
                 "use server";
-                await signOut({ redirectTo: "/" });
+                await signOut({ redirectTo: "/login" });
               }}
             >
               <button
@@ -77,22 +64,18 @@ const Navbar = async () => {
                 Sign Out
               </button>
             </form>
-          ) : null}
-
-          <div className="flex items-center">
-            <Image
-              src="/Logo_PLN_horizontal.png"
-              alt="logo"
-              width={100}
-              height={10}
-              priority
-              className="h-[50px]"
-            />
-          </div>
+          ) : (
+            <Link
+              href="/login"
+              className="bg-red-400 text-white px-4 py-2 rounded-md hover:bg-red-500"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </nav>
   );
 };
 
-export default Navbar;
+export default SideBarHome;

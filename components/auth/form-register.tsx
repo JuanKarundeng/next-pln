@@ -27,7 +27,7 @@ const FormRegister = () => {
         <input
           type="text"
           name="name"
-          placeholder="John Doe"
+          placeholder="Juan Karundeng"
           className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg w-full p-2.5"
         />
         <div aria-live="polite" aria-atomic="true">
@@ -46,7 +46,7 @@ const FormRegister = () => {
         <input
           type="email"
           name="email"
-          placeholder="john.doe@gmail.com"
+          placeholder="juankarundeng@gmail.com"
           className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg w-full p-2.5"
         />
         <div aria-live="polite" aria-atomic="true">
