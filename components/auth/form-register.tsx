@@ -8,7 +8,7 @@ import { RegisterButton } from "@/components/button";
 const FormRegister = () => {
   const [state, formAction] = useFormState(signUpCredentials, null);
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-6 mt-20 sm:mt-20">
       {state?.message ? (
         <div
           className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100"
@@ -22,7 +22,7 @@ const FormRegister = () => {
           htmlFor="name"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
-          Name
+          Nama
         </label>
         <input
           type="text"
@@ -60,7 +60,7 @@ const FormRegister = () => {
           htmlFor="password"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
-          Password
+          Kata Sandi
         </label>
         <input
           type="password"
@@ -79,7 +79,7 @@ const FormRegister = () => {
           htmlFor="ConfirmPassword"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
-          Confirm Password
+          Konfirmasi Sandi
         </label>
         <input
           type="password"
@@ -95,10 +95,10 @@ const FormRegister = () => {
       </div>
       <RegisterButton />
       <p className="text-sm font-light text-gray-500">
-        Already have an account?
+        Sudah punya akun?
         <Link href="/login">
           <span className="font-medium pl-1 text-blue-600 hover:text-blue-700">
-            Sign In
+            masuk
           </span>
         </Link>
       </p>

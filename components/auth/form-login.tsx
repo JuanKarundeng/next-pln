@@ -8,7 +8,7 @@ import { LoginButton } from "@/components/button";
 const FormLogin = () => {
   const [state, formAction] = useFormState(signInCredentials, null);
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-6 mt-10 sm:mt-20">
       {state?.message ? (
         <div
           className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100"

@@ -1,13 +1,13 @@
-import Galeri from "@/components/Galeri";
+import UserNewTable from "@/components/akun-baru";
 
-const GaleriPage = () => {
+const DaftarAkunPage = () => {
   return (
     <div className="bg-slate-50 min-h-screen">
       <div className="max-w-screen-md mx-auto py-10">
-        <Galeri />
+        <UserNewTable />
       </div>
     </div>
   );
 };
 
-export default GaleriPage;
+export default DaftarAkunPage;

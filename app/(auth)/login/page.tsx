@@ -10,7 +10,7 @@ const Login = ({ searchParams }: { searchParams?: { error?: string } }) => {
   const params = searchParams?.error;
 
   return (
-    <div className="p-6 space-y-4 flex-col justify-center items-center">
+    <div className="p-6 mt-10 sm:mt-20 space-y-4 flex-col justify-center items-center">
       <h1 className="text-2xl font-bold text-gray-900">Masuk Ke Akun Anda</h1>
       {params === "OAuthAccountNotLinked" ? (
         <div

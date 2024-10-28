@@ -34,8 +34,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           where: { email },
         });
 
-        if (!user || !user.password) {
-          throw new Error("No user found");
+        // Jika user tidak ditemukan atau isUser = false, return null
+        if (!user || !user.password || user.isUser === false) {
+          throw new Error("User not found or not authorized");
         }
 
         const passwordMatch = compareSync(password, user.password);
@@ -46,11 +47,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  // callback
+  // callbacks
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const ProtectedRoutes = ["/dashboard", "/user", "/product"];
+      const ProtectedRoutes = [
+        "/dashboard",
+        "/user",
+        "/product",
+        "/masuk-data",
+        "/panel-admin",
+        "/daftar-akun",
+        "/pendaftar-baru",
+        "/riwayat-data",
+        "/ubah-harga",
+        "/ubah-kata-sandi",
+        "/validasi-pembayaran",
+      ];
 
       if (!isLoggedIn && ProtectedRoutes.includes(nextUrl.pathname)) {
         return Response.redirect(new URL("/login", nextUrl));
