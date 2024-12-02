@@ -34,7 +34,7 @@ export const signUpCredentials = async (
     });
   } catch (error) {
     console.log(error);
-    return { message: "Failed to register user" };
+    return { message: "Gagal Mendaftar" };
   }
   redirect("/login");
 };
@@ -57,14 +57,14 @@ export const signInCredentials = async (
   const { email, password } = validatedFields.data;
 
   try {
-    await signIn("credentials", { email, password, redirectTo: "/dashboard" });
+    await signIn("credentials", { email, password, redirectTo: "/masuk-data" });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { message: "Invalid Credentials." };
+          return { message: "Alamat Surel atau Kata Sandi Salah" };
         default:
-          return { message: "Something went wrong." };
+          return { message: "Gagal Masuk" };
       }
     }
     throw error;
@@ -78,13 +78,13 @@ export const TolakUser = async (userId) => {
     });
 
     if (deletedUser) {
-      return { message: "User has been deleted successfully." };
+      return { message: "Pengguna Berhasil Dihapus" };
     } else {
-      return { message: "User not found." };
+      return { message: "Penggguna Tidak Ditemukan" };
     }
   } catch (error) {
     console.error("Failed to delete user:", error);
-    return { message: "Failed to delete user." };
+    return { message: "Pengguna Gagal Dihapus" };
   }
 };
 
@@ -111,8 +111,6 @@ export const resetPassword = async (userId) => {
     const defaultPassword = "12345678"; // Password default
     const hashedPassword = hashSync(defaultPassword, 10); // Hash password default
 
-    console.log(`Hashing password for user ${userId}`); // Log untuk memantau proses hashing
-
     // Update password di database
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -120,15 +118,12 @@ export const resetPassword = async (userId) => {
     });
 
     if (updatedUser) {
-      console.log(`Password reset for user ${userId} was successful.`);
-      return { message: "Password has been reset to default (12345678)." };
+      return { message: "Kata Sandi Sudah Diatur ke 12345678" };
     } else {
-      console.log("User not found.");
-      return { message: "User not found." };
+      return { message: "Pengguna tidak Ditemukan" };
     }
   } catch (error) {
-    console.error("Failed to reset password:", error);
-    return { message: "Failed to reset password." };
+    return { message: "Kata Sandi Gagal Diatur Ulang" };
   }
 };
 
@@ -155,7 +150,6 @@ export const ubahSandi = async (userId, newPassword) => {
       return { message: "Pengguna tidak ditemukan." };
     }
   } catch (error) {
-    console.error("Error updating password:", error.message);
     return { message: "Terjadi kesalahan saat mengubah kata sandi." };
   }
 };

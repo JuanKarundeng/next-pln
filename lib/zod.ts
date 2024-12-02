@@ -1,22 +1,22 @@
 import { object, string } from "zod";
 
 export const SignInSchema = object({
-  email: string().email("Invalid Email"),
+  email: string().email("Alamat Surel Tidak Valid"),
   password: string()
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .min(8, "Kata Sandi Harus Lebih Dari 8 Karakter")
+    .max(32, "Kata Sandi Harus Kurang Dari 32 Karakter"),
 });
 
 export const RegisterSchema = object({
-  name: string().min(1, "Name must be more than 1 Character"),
-  email: string().email("Invalid Email"),
+  name: string().min(1, "Nama Harus Lebih Dari 1 Karakter"),
+  email: string().email("Alamat Surel Tidak Valid"),
   password: string()
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .min(8, "Kata Sandi Harus Lebih Dari 8 Karakter")
+    .max(32, "Kata Sandi Harus Kurang Dari 32 Karakter"),
   ConfirmPassword: string()
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
+    .min(8, "Kata Sandi Harus Lebih Dari 8 Karakter")
+    .max(32, "Kata Sandi Harus Kurang Dari 32 Karakter"),
 }).refine((data) => data.password === data.ConfirmPassword, {
-  message: "Password does not match",
+  message: "Kata Sandi Tidak Sama",
   path: ["ConfirmPassword"],
 });

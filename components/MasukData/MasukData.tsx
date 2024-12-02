@@ -6,7 +6,10 @@ import Config from "@/lib/config";
 
 const MasukData = () => {
   const [bagian, setBagian] = useState("");
-  const [plat, setPlat] = useState("");
+  // const [plat, setPlat] = useState("");
+  const [kar1, setKar1] = useState("");
+  const [kar2, setKar2] = useState("");
+  const [kar3, setKar3] = useState("");
   const [km_awal, setKm_awal] = useState("");
   const [km_akhir, setKm_akhir] = useState("");
   const [jumlah_cc, setJumlah_cc] = useState("");
@@ -24,6 +27,10 @@ const MasukData = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const plat = `${kar1}${" "}${kar2}${" "}${kar3}`;
+
+  console.log(plat);
+
   // Fungsi untuk handle file input dan preview
   const loadImage = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -39,7 +46,9 @@ const MasukData = () => {
 
   const resetForm = () => {
     setBagian("");
-    setPlat("");
+    setKar1("");
+    setKar2("");
+    setKar3("");
     setKm_awal("");
     setKm_akhir("");
     setJumlah_cc("");
@@ -58,7 +67,9 @@ const MasukData = () => {
 
     if (
       !bagian ||
-      !plat ||
+      !kar1 ||
+      !kar2 ||
+      !kar3 ||
       !km_awal ||
       !km_akhir ||
       !jumlah_cc ||
@@ -87,8 +98,12 @@ const MasukData = () => {
     formData.append("foto_km_akhir", foto_km_akhir as Blob);
 
     try {
-      await axios.post(`${Config.ipPUBLIC}/masuk-data`, formData, {});
-      setModalMessage("Data berhasil ditambahkan!");
+      if (km_akhir <= km_awal) {
+        setModalMessage("Km Akhir Harus Lebih Besar Dari Km Awal");
+      } else {
+        await axios.post(`${Config.ipPUBLIC}/masuk-data`, formData, {});
+        setModalMessage("Data berhasil ditambahkan!");
+      }
       setIsSuccess(true);
       setOpenModal(true);
       resetForm();
@@ -140,7 +155,9 @@ const MasukData = () => {
                     onChange={(e) => setBagian(e.target.value)}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none "
                   >
-                    <option value="">Pilih Bagian</option>
+                    <option value="" hidden disabled>
+                      Pilih Bagian
+                    </option>
                     <option value="Keuangan Dan Umum">Keuangan dan Umum</option>
                     <option value="Niaga Dan Pemasaran">
                       Niaga dan Pemasaran
@@ -156,20 +173,55 @@ const MasukData = () => {
                   </select>
                 </div>
 
-                <div className="mb-7 flex flex-col gap-7">
-                  <input
-                    type="text"
-                    placeholder="Masukkan Plat Nomor"
-                    value={plat}
-                    onChange={(e) => setPlat(e.target.value)}
-                    className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none"
-                  />
+                <div className="mb-7">
+                  <h1>Plat Nomor</h1>
+                  <div className="flex">
+                    <input
+                      type="text"
+                      placeholder="DB"
+                      value={kar1}
+                      maxLength={2} // Membatasi panjang input menjadi 2
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase(); // Mengubah ke huruf kapital
+                        if (/^[A-Za-z]*$/.test(value)) {
+                          setKar1(value);
+                        }
+                      }}
+                      className="w-[10%] px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <input
+                      type="number"
+                      placeholder="1234"
+                      value={kar2}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d{0,4}$/.test(value)) {
+                          // Membatasi angka hanya 4 digit
+                          setKar2(value);
+                        }
+                      }}
+                      className="px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <input
+                      type="text"
+                      placeholder="XY"
+                      value={kar3}
+                      maxLength={3} // Membatasi panjang input menjadi 3
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase(); // Mengubah ke huruf kapital
+                        if (/^[A-Za-z]*$/.test(value)) {
+                          setKar3(value);
+                        }
+                      }}
+                      className="w-[10%] px-3 py-2 border border-gray-300 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-10 flex flex-col gap-7.5 lg:flex-row lg:justify-between lg:gap-14">
                   <input
                     type="number"
-                    placeholder="Masukkan Kilometer awal"
+                    placeholder="Masukkan Kilometer Awal"
                     value={km_awal}
                     onChange={(e) => setKm_awal(e.target.value)}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none lg:w-1/2"
@@ -177,7 +229,7 @@ const MasukData = () => {
 
                   <input
                     type="number"
-                    placeholder="Masukkan Kilometer akhir"
+                    placeholder="Masukkan Kilometer Akhir"
                     value={km_akhir}
                     onChange={(e) => setKm_akhir(e.target.value)}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 mt-5 sm:mt-0 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none lg:w-1/2"
@@ -200,7 +252,9 @@ const MasukData = () => {
                     onChange={(e) => setJumlah_cc(e.target.value)}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none"
                   >
-                    <option value="">Pilih Jumlah CC</option>
+                    <option value="" hidden disabled>
+                      Pilih Jumlah CC
+                    </option>
                     <option value="1000">1000</option>
                     <option value="1200">1200</option>
                     <option value="1300">1300</option>
@@ -217,7 +271,9 @@ const MasukData = () => {
                     onChange={(e) => setJenis_bensin(e.target.value)}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none"
                   >
-                    <option value="">Pilih Jenis Bensin</option>
+                    <option value="" hidden disabled>
+                      Pilih Jenis Bensin
+                    </option>
                     <option value="Pertalite">Pertalite</option>
                     <option value="Pertamax">Pertamax</option>
                     <option value="Pertamax Turbo">Pertamax Turbo</option>
@@ -230,58 +286,94 @@ const MasukData = () => {
                 {/* Field Input lain */}
 
                 <div className="mb-7 flex flex-col gap-7">
-                  <label htmlFor="foto_nota">Unggah Foto Nota:</label>
+                  <label
+                    htmlFor="foto_nota"
+                    className="font-semibold text-gray-700"
+                  >
+                    Unggah Foto Nota:
+                  </label>
+                  <label
+                    htmlFor="foto_nota"
+                    className="file-input file-input-bordered w-1/4 cursor-pointer py-2 px-4 border border-gray-600 rounded-md text-center bg-gray-100 hover:bg-gray-200"
+                  >
+                    Pilih Berkas
+                  </label>
                   <input
+                    id="foto_nota"
                     type="file"
                     accept="image/*"
                     onChange={(e) =>
                       loadImage(e, setFoto_nota, setPreview_nota)
                     }
-                    className="file-input file-input-bordered w-full"
+                    className="hidden"
                   />
                   {preview_nota && (
                     <img
                       src={preview_nota}
                       alt="Preview Nota"
-                      className="mt-4 h-40 w-40 object-cover"
+                      className="mt-4 h-40 w-40 object-cover border border-gray-300 rounded-md"
                     />
                   )}
                 </div>
 
                 <div className="mb-7 flex flex-col gap-7">
-                  <label htmlFor="foto_km_awal">Unggah Foto KM Awal:</label>
+                  <label
+                    htmlFor="foto_km_awal"
+                    className="font-semibold text-gray-700"
+                  >
+                    Unggah Foto Kilometer Awal:
+                  </label>
+                  <label
+                    htmlFor="foto_km_awal"
+                    className="file-input file-input-bordered w-1/4 cursor-pointer py-2 px-4 border border-gray-600 rounded-md text-center bg-gray-100 hover:bg-gray-200"
+                  >
+                    Pilih Berkas
+                  </label>
                   <input
+                    id="foto_km_awal"
                     type="file"
                     accept="image/*"
                     onChange={(e) =>
                       loadImage(e, setFoto_km_awal, setPreview_km_awal)
                     }
-                    className="file-input file-input-bordered w-full"
+                    className="hidden"
                   />
                   {preview_km_awal && (
                     <img
                       src={preview_km_awal}
                       alt="Preview KM Awal"
-                      className="mt-4 h-40 w-40 object-cover"
+                      className="mt-4 h-40 w-40 object-cover border border-gray-300 rounded-md"
                     />
                   )}
                 </div>
 
                 <div className="mb-7 flex flex-col gap-7">
-                  <label htmlFor="foto_km_akhir">Unggah Foto KM Akhir:</label>
+                  <label
+                    htmlFor="foto_km_akhir"
+                    className="font-semibold text-gray-700"
+                  >
+                    Unggah Foto Kilometer Akhir:
+                  </label>
+                  <label
+                    htmlFor="foto_km_akhir"
+                    className="file-input file-input-bordered w-1/4 cursor-pointer py-2 px-4 border border-gray-600 rounded-md text-center bg-gray-100 hover:bg-gray-200"
+                  >
+                    Pilih Berkas
+                  </label>
                   <input
+                    id="foto_km_akhir"
                     type="file"
                     accept="image/*"
                     onChange={(e) =>
                       loadImage(e, setFoto_km_akhir, setPreview_km_akhir)
                     }
-                    className="file-input file-input-bordered w-full"
+                    className="hidden"
                   />
                   {preview_km_akhir && (
                     <img
                       src={preview_km_akhir}
                       alt="Preview KM Akhir"
-                      className="mt-4 h-40 w-40 object-cover"
+                      className="mt-4 h-40 w-40 object-cover border border-gray-300 rounded-md"
                     />
                   )}
                 </div>
@@ -290,9 +382,9 @@ const MasukData = () => {
                   <button
                     type="submit"
                     aria-label="send message"
-                    className="inline-flex items-center gap-2.5 rounded-full bg-black px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark"
+                    className="inline-flex items-center gap-2.5 rounded-full bg-blue-500 px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blue-600"
                   >
-                    Kirim
+                    Simpan
                     <svg
                       className="fill-white"
                       width="14"
@@ -315,13 +407,10 @@ const MasukData = () => {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="relative w-full max-w-md">
                 <div className="bg-white text-center rounded-lg shadow-lg p-6">
-                  <h2 className="text-xl font-bold">
-                    {isSuccess ? "Berhasil" : "Gagal"}
-                  </h2>
                   <p>{modalMessage}</p>
                   <button
                     onClick={() => setOpenModal(false)}
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+                    className="bg-gray-100 hover:bg-gray-200 border border-gray-600 rounded-md mt-4 px-4 py-2 text-black"
                   >
                     Tutup
                   </button>

@@ -95,7 +95,7 @@ const Sidebar = ({ onClose, name, role, session }) => (
             }}
             className="mt-6 w-full bg-red-400 text-white py-2 rounded-md hover:bg-red-500"
           >
-            Sign Out
+            Keluar
           </button>
         )}
       </div>
@@ -151,24 +151,54 @@ const Header = () => {
             {isLoggedIn && (
               <ul className="hidden md:flex items-center gap-8 mr-5 font-semibold text-gray-600 hover:text-gray-800">
                 <li>
-                  <Link href="/masuk-data">Masuk Data</Link>
+                  <Link
+                    href="/masuk-data"
+                    className="border-r border-gray-500 pr-3 text-sm"
+                  >
+                    Masuk Data
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/riwayat-data">Riwayat Memasukkan Data</Link>
+                  <Link
+                    href="/riwayat-data"
+                    className="border-r border-gray-500 pr-3"
+                  >
+                    Riwayat Memasukkan Data
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/ubah-kata-sandi">Ubah Kata Sandi</Link>
+                  <Link
+                    href="/ubah-kata-sandi"
+                    className="border-r border-gray-500 pr-3 text-sm"
+                  >
+                    Ubah Kata Sandi
+                  </Link>
                 </li>
                 {session?.user?.role === "admin" && (
                   <ul className="flex gap-4">
                     <li>
-                      <Link href="/panel-admin">Panel Admin</Link>
+                      <Link
+                        href="/panel-admin"
+                        className="border-r border-gray-500 pr-3 text-sm"
+                      >
+                        Panel Admin
+                      </Link>
                     </li>
                     <li>
-                      <Link href="/daftar-akun">Daftar Akun</Link>
+                      <Link
+                        href="/daftar-akun"
+                        className="border-r border-gray-500 pr-3 text-sm"
+                      >
+                        Daftar Akun
+                      </Link>
                     </li>
                     <li>
-                      <Link href="/pendaftar-baru">Pendaftar Baru</Link>
+                      <Link
+                        href="/pendaftar-baru"
+                        className="border-r border-gray-500 pr-3 text-sm"
+                      >
+                        Pendaftar Baru
+                      </Link>
                     </li>
                   </ul>
                 )}
@@ -182,7 +212,11 @@ const Header = () => {
                     {session.user.name}
                   </span>
                   <span className="font-xs text-gray-400 text-right capitalize">
-                    {session.user.role}
+                    {session.user.role === "user"
+                      ? "Pengguna"
+                      : session.user.role === "admin"
+                      ? "Admin"
+                      : ""}
                   </span>
                 </div>
                 <button
@@ -204,7 +238,7 @@ const Header = () => {
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="bg-red-400 text-white px-4 py-2 rounded-md hover:bg-red-500"
               >
-                Sign Out
+                Keluar
               </button>
             ) : null}
           </div>

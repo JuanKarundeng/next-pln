@@ -28,9 +28,9 @@ const UserNewTableClient = ({ users }) => {
           <table className="w-full bg-white mt-10 sm:mt-20">
             <thead className="border-b border-gray-100">
               <tr>
-                <th className="py-3 px-6 text-left text-sm">Name</th>
-                <th className="py-3 px-6 text-left text-sm">Email</th>
-                <th className="py-3 px-6 text-left text-sm">Validasi</th>
+                <th className="py-3 px-6 text-left text-sm">Nama</th>
+                <th className="py-3 px-6 text-left text-sm">Alamat Surel</th>
+                <th className="py-3 px-6 text-left text-sm">Aksi</th>
               </tr>
             </thead>
             <tbody>

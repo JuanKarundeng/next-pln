@@ -21,14 +21,14 @@ const UserTableClient = ({ users }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto px-3">
+      <div className="overflow-x-auto px-0">
         <table className="w-full bg-white mt-10 sm:mt-20 ">
           <thead className="border-b border-gray-100">
             <tr>
-              <th className="py-3 px-6 text-left text-sm">Name</th>
-              <th className="py-3 px-6 text-left text-sm">Email</th>
-              <th className="py-3 px-6 text-left text-sm">Role</th>
-              <th className="py-3 px-6 text-left text-sm">Aksi</th>
+              <th className="py-3 px-6 text-left text-sm">Nama</th>
+              <th className="py-3 px-6 text-center text-sm">Alamat Surel</th>
+              <th className="py-3 px-6 text-center text-sm">Peran</th>
+              <th className="py-3 px-6 text-center text-sm">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -36,13 +36,19 @@ const UserTableClient = ({ users }) => {
               <tr key={user.id}>
                 <td className="py-3 px-6">{user.name}</td>
                 <td className="py-3 px-6">{user.email}</td>
-                <td className="py-3 px-6">{user.role}</td>
+                <td className="py-3 px-6">
+                  {user.role === "user"
+                    ? "Pengguna"
+                    : user.role === "admin"
+                    ? "Admin"
+                    : ""}
+                </td>
                 <td className="py-3 px-6 flex gap-2">
                   <button
                     onClick={() => handleResetPassword(user.id)} // Pastikan idUser diteruskan
                     className="bg-green-500 text-white py-1 text-sm sm:text-md px-3 rounded hover:bg-green-600"
                   >
-                    Reset Password
+                    Atur Ulang Kata Sandi
                   </button>
                   <button
                     onClick={() => handleDeleteUser(user.id)}

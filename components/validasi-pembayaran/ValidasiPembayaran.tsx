@@ -1,36 +1,41 @@
-import Config from "@/lib/config";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import html2canvas from "html2canvas";
+import Config from "@/lib/config";
+import Print from "@/app/print/page";
 
 const ValidasiPembayaran = () => {
   const [masukData, setMasukData] = useState([]);
+  const [openModalPDF, setOpenModalPDF] = useState(false);
+  const [namaTTD, setNamaTTD] = useState("");
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [printVisible, setPrintVisible] = useState(false);
+  const [isTableVisible, setIsTableVisible] = useState(true); // Menambahkan state untuk kontrol visibilitas tabel
+  const ComponentToPDF = useRef();
 
   const getMasukData = async (date) => {
     try {
       const response = await axios.get(`${Config.ipPUBLIC}/masuk-data`);
-
-      // Filter data berdasarkan validasi "sudah" dan tanggal yang dipilih
       const filteredData = response.data.filter(
         (item) => item.validasi === "sudah" && item.createdAt.startsWith(date)
       );
-
       setMasukData(filteredData);
     } catch (error) {
-      console.log(error);
+      console.error("Gagal memuat data:", error);
     }
   };
 
   useEffect(() => {
-    getMasukData(selectedDate); // Memuat data untuk tanggal hari ini saat pertama kali halaman dimuat
+    if (selectedDate) {
+      getMasukData(selectedDate);
+    }
   }, [selectedDate]);
 
   const handleDateChange = (e) => {
-    setSelectedDate(e.target.value); // Ubah tanggal berdasarkan pilihan pengguna
+    setSelectedDate(e.target.value);
   };
 
   const hargaRP = (number) => {
@@ -40,104 +45,156 @@ const ValidasiPembayaran = () => {
     }).format(number);
   };
 
-  // Fungsi untuk mengunduh data dalam bentuk PDF
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    doc.text(`Laporan Pembayaran - Tanggal: ${selectedDate}`, 10, 10);
+  const handleSavePDF = async () => {
+    if (!namaTTD) {
+      alert("Masukkan nama penandatangan!");
+      return;
+    }
 
-    const tableColumn = [
-      "Bagian",
-      "Plat Nomor",
-      "KM Awal",
-      "KM Akhir",
-      "Biaya Pembayaran",
-      "Biaya Disetujui",
-    ];
-    const tableRows = [];
+    const element = ComponentToPDF.current;
+    if (!element) return;
 
-    masukData.forEach((item) => {
-      const rowData = [
-        item.bagian,
-        item.plat,
-        item.km_awal,
-        item.km_akhir,
-        item.pembayaran,
-        hargaRP(item.harga_disetujui),
-      ];
-      tableRows.push(rowData);
-    });
+    try {
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
 
-    // Menambahkan tabel ke PDF
-    doc.autoTable(tableColumn, tableRows, { startY: 20 });
-    doc.save(`Laporan_Pembayaran_${selectedDate}.pdf`);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const pdfBlob = pdf.output("blob");
+      const urlPDF = URL.createObjectURL(pdfBlob);
+      window.open(urlPDF, "_blank");
+
+      // Menyembunyikan tabel dan modal setelah menyimpan
+      setIsTableVisible(false); // Menyembunyikan tabel
+      setNamaTTD("");
+      setOpenModalPDF(false);
+      setPrintVisible(false); // Menyembunyikan <Print> setelah berhasil mengunduh
+    } catch (error) {
+      console.error("Gagal menghasilkan PDF:", error);
+    }
   };
 
   return (
     <div className="w-full py-1 sm:py-10">
-      <div className="flex justify-between">
-        <input
-          type="date"
-          className="bg-gray-300 p-2 rounded-md mb-2"
-          value={selectedDate}
-          onChange={handleDateChange}
-        />
-        <button
-          className="bg-gray-300 text-sm sm:text-md py-2 px-10 rounded-md mb-2"
-          onClick={generatePDF}
-        >
-          Unduh PDF
-        </button>
+      {/* Modal untuk nama penandatangan */}
+      {openModalPDF && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-30 z-[60]">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 className="text-xl font-semibold mb-4">Nama Penandatangan</h3>
+            <input
+              type="text"
+              value={namaTTD}
+              onChange={(e) => setNamaTTD(e.target.value)}
+              className="w-full border border-gray-300 p-2 rounded mb-4"
+              placeholder="Masukkan nama penandatangan"
+            />
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => {
+                  setOpenModalPDF(false);
+                  setPrintVisible(false); // Menyembunyikan <Print> jika batal
+                  setIsTableVisible(true); // Menampilkan tabel kembali jika batal
+                }}
+                className="px-4 py-2 bg-gray-300 rounded"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleSavePDF}
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Area yang akan dicetak */}
+      <div
+        ref={ComponentToPDF}
+        style={{ display: printVisible ? "block" : "none" }}
+      >
+        <Print dataGet={masukData} tgl={selectedDate} namaTTD={namaTTD} />
       </div>
-      <div className="overflow-x-auto">
-        <table>
-          <thead>
-            <tr>
-              <th className="border border-black text-sm sm:text-md px-24 py-2">
-                Bagian
-              </th>
-              <th className="border border-black text-sm sm:text-md px-8 py-2">
-                Plat Nomor
-              </th>
-              <th className="border border-black text-sm sm:text-md px-8 py-2">
-                KM Awal
-              </th>
-              <th className="border border-black text-sm sm:text-md px-8 py-2">
-                KM Akhir
-              </th>
-              <th className="border border-black text-sm sm:text-md px-8 py-2">
-                Biaya Pembayaran
-              </th>
-              <th className="border border-black text-sm sm:text-md px-8 py-2">
-                Biaya Disetujui
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {masukData.map((item, index) => (
-              <tr key={index + 1}>
-                <td className="border border-black text-sm sm:text-md px-6 py-4">
-                  {item.bagian}
-                </td>
-                <td className="border border-black text-sm sm:text-md px-3 py-4">
-                  {item.plat}
-                </td>
-                <td className="border border-black text-sm sm:text-md px-3 py-4">
-                  {item.km_awal}
-                </td>
-                <td className="border border-black text-sm sm:text-md px-3 py-4">
-                  {item.km_akhir}
-                </td>
-                <td className="border border-black text-sm sm:text-md px-3 py-4">
-                  {item.pembayaran}
-                </td>
-                <td className="border border-black text-sm sm:text-md px-3 py-4">
-                  {hargaRP(item.harga_disetujui)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {isTableVisible && (
+        <div className="">
+          <div className="flex justify-between items-center mb-4">
+            <input
+              type="date"
+              className="bg-gray-300 p-2 rounded-md"
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+            <button
+              className="bg-gray-300 text-sm sm:text-md py-2 px-10 rounded-md"
+              onClick={() => {
+                setOpenModalPDF(true);
+                setPrintVisible(true); // Menampilkan <Print> saat klik unduh PDF
+                setIsTableVisible(false); // Menyembunyikan tabel saat klik unduh PDF
+              }}
+            >
+              Unduh PDF
+            </button>
+          </div>
+          <div className="overflow-x-auto">
+            {masukData.length > 0 ? (
+              <table className="border-collapse w-full">
+                <thead>
+                  <tr>
+                    {[
+                      "Bagian",
+                      "Plat Nomor",
+                      "KM Awal",
+                      "KM Akhir",
+                      "Biaya Pembayaran",
+                      "Biaya Disetujui",
+                    ].map((header, index) => (
+                      <th
+                        key={index}
+                        className="border border-black text-sm sm:text-md px-8 py-2"
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {masukData.map((item, index) => (
+                    <tr key={index}>
+                      <td className="border border-black px-6 py-4">
+                        {item.bagian}
+                      </td>
+                      <td className="border border-black px-3 py-4">
+                        {item.plat}
+                      </td>
+                      <td className="border border-black px-3 py-4">
+                        {item.km_awal}
+                      </td>
+                      <td className="border border-black px-3 py-4">
+                        {item.km_akhir}
+                      </td>
+                      <td className="border border-black px-3 py-4">
+                        {item.pembayaran}
+                      </td>
+                      <td className="border border-black px-3 py-4">
+                        {hargaRP(item.harga_disetujui)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-center mt-4">
+                Tidak ada data untuk tanggal ini.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

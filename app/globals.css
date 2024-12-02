@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media print {
+  .print-pdf {
+    display: block !important; /* Memaksa halaman baru */
+  }
+}
+/* Hanya terlihat saat cetak */
+.print-only {
+  display: none;
+}
+
+@media print {
+  .print-only {
+    display: block;
+  }
+  body *:not(.print-only) {
+    visibility: hidden;
+  }
+}
