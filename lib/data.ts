@@ -60,14 +60,11 @@ export const getUsersByIsUserTrue = async () => {
 };
 
 export const getUsersByIsUserFalse = async () => {
-  const session = await auth();
-  if (!session || !session.user || session.user.role !== "admin")
-    redirect("/dashboard");
-
   try {
     const users = await prisma.user.findMany({
-      where: { isUser: false }, // Mengambil pengguna dengan isUser = false
+      where: { isUser: false },
     });
+
     return users;
   } catch (error) {
     console.log(error);

@@ -1,6 +1,7 @@
 "use client";
 
 import Config from "@/lib/config";
+import { formatDate } from "@/lib/utils";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -53,50 +54,67 @@ const RiwayatData = () => {
               <tr>
                 <th className="border border-black px-24 py-2">Bagian</th>
                 <th className="border border-black px-8 py-2">Plat Nomor</th>
-                <th className="border border-black px-8 py-2">KM Awal</th>
-                <th className="border border-black px-8 py-2">KM Akhir</th>
+                <th className="border border-black px-8 py-2">
+                  Kilometer Awal
+                </th>
+                <th className="border border-black px-8 py-2">
+                  Kilometer Akhir
+                </th>
                 <th className="border border-black px-8 py-2">Jumlah CC</th>
                 <th className="border border-black px-8 py-2">Jenis Bensin</th>
                 <th className="border border-black px-8 py-2">Keterangan</th>
               </tr>
             </thead>
             <tbody>
-              {filterDataByDate().map((item, index) => (
-                <tr key={index + 1}>
-                  <td className="border border-black px-6 py-4">
-                    {item.bagian}
-                  </td>
-                  <td className="border border-black px-3 py-4">{item.plat}</td>
-                  <td className="border border-black px-3 py-4">
-                    {item.km_awal}
-                  </td>
-                  <td className="border border-black px-3 py-4">
-                    {item.km_akhir}
-                  </td>
-                  <td className="border border-black px-3 py-4">
-                    {item.jumlah_cc}
-                  </td>
-                  <td className="border border-black px-3 py-4">
-                    {item.jenis_bensin}
-                  </td>
-                  <td className="border border-black text-center">
-                    <Link
-                      href={`/detail-riwayat/${item.id}`}
-                      className={`px-3 py-1 ${
-                        item.keterangan === "Hati-Hati"
-                          ? "bg-yellow-400"
-                          : item.keterangan === "Aman"
-                          ? "bg-green-400"
-                          : item.keterangan === "Bahaya"
-                          ? "bg-red-500"
-                          : "bg-gray-200"
-                      }`}
-                    >
-                      {item.keterangan}
-                    </Link>
+              {filterDataByDate().length > 0 ? (
+                filterDataByDate().map((item, index) => (
+                  <tr key={index + 1}>
+                    <td className="border border-black px-6 py-4">
+                      {item.bagian}
+                    </td>
+                    <td className="border border-black px-3 py-4">
+                      {item.plat}
+                    </td>
+                    <td className="border border-black px-3 py-4">
+                      {item.km_awal}
+                    </td>
+                    <td className="border border-black px-3 py-4">
+                      {item.km_akhir}
+                    </td>
+                    <td className="border border-black px-3 py-4">
+                      {item.jumlah_cc}
+                    </td>
+                    <td className="border border-black px-3 py-4">
+                      {item.jenis_bensin}
+                    </td>
+                    <td className="border border-black text-center">
+                      <Link
+                        href={`/detail-riwayat/${item.id}`}
+                        className={`px-3 py-1 ${
+                          item.keterangan === "Hati-Hati"
+                            ? "bg-yellow-400"
+                            : item.keterangan === "Aman"
+                            ? "bg-green-400"
+                            : item.keterangan === "Bahaya"
+                            ? "bg-red-500"
+                            : "bg-gray-200"
+                        }`}
+                      >
+                        {item.keterangan}
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    className="border border-black px-6 py-4 text-center"
+                    colSpan={7}
+                  >
+                    Data Tidak Ada untuk Tanggal {formatDate(selectedDate)}
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

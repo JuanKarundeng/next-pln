@@ -239,7 +239,7 @@ const MasukData = () => {
                 <div className="mb-10 flex gap-7">
                   <input
                     type="number"
-                    placeholder="Jumlah Pembayaran"
+                    placeholder="Total Pembayaran"
                     value={pembayaran}
                     onChange={(e) => setPembayaran(e.target.value)}
                     className="w-full border-b border-stroke bg-transparent pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none"

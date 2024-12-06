@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { TolakUser, updateUserStatus } from "@/lib/actions";
 
-const UserNewTableClient = ({ users }) => {
+const UserNewTableClient = ({ users, jumlahData }) => {
   const [message, setMessage] = useState(""); // State untuk menyimpan pesan
 
   const handleDeleteUser = async (userId) => {

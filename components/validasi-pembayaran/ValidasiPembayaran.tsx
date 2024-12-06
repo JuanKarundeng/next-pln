@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Config from "@/lib/config";
 import Print from "@/app/print/page";
+import { tanggalFormat } from "@/utils/helper";
 
 const ValidasiPembayaran = () => {
   const [masukData, setMasukData] = useState([]);
@@ -66,6 +67,7 @@ const ValidasiPembayaran = () => {
       const pdfBlob = pdf.output("blob");
       const urlPDF = URL.createObjectURL(pdfBlob);
       window.open(urlPDF, "_blank");
+      window.location.reload();
 
       // Menyembunyikan tabel dan modal setelah menyimpan
       setIsTableVisible(false); // Menyembunyikan tabel
@@ -148,10 +150,10 @@ const ValidasiPembayaran = () => {
                     {[
                       "Bagian",
                       "Plat Nomor",
-                      "KM Awal",
-                      "KM Akhir",
-                      "Biaya Pembayaran",
-                      "Biaya Disetujui",
+                      "Kilometer Awal",
+                      "Kilometer Akhir",
+                      "Total Pembayaran",
+                      "Harga Disetujui",
                     ].map((header, index) => (
                       <th
                         key={index}
@@ -188,9 +190,37 @@ const ValidasiPembayaran = () => {
                 </tbody>
               </table>
             ) : (
-              <p className="text-center mt-4">
-                Tidak ada data untuk tanggal ini.
-              </p>
+              <table className="border-collapse w-full">
+                <thead>
+                  <tr>
+                    {[
+                      "Bagian",
+                      "Plat Nomor",
+                      "Kilometer Awal",
+                      "Kilometer Akhir",
+                      "Total Pembayaran",
+                      "Harga Disetujui",
+                    ].map((header, index) => (
+                      <th
+                        key={index}
+                        className="border border-black text-sm sm:text-md px-8 py-2"
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      className="border border-black px-6 py-4 text-center"
+                      colSpan={6}
+                    >
+                      Belum Ada Data Pada Tanggal {tanggalFormat(selectedDate)}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             )}
           </div>
         </div>

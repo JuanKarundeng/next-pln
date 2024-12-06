@@ -68,7 +68,7 @@ const Page = () => {
                   href={masukData.url_km_awal}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md mt-10"
                 >
-                  Lihat Foto KM Awal
+                  Lihat Foto Kilometer Awal
                 </a>
               </div>
               <div>
@@ -77,11 +77,11 @@ const Page = () => {
                   href={masukData.url_km_akhir}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md"
                 >
-                  Lihat Foto KM Akhir
+                  Lihat Foto Kilometer Akhir
                 </a>
               </div>
               <div>
-                <p className="my-4 ">Harga/Pembayaran (Rp)</p>
+                <p className="my-4 ">Bukti Pembayaran (Rp)</p>
                 <a
                   href={masukData.url_nota}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md"

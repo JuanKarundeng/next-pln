@@ -1,13 +1,14 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { Prisma } from "@prisma/client";
+import useLengthUserFalse from "@/lib/lengthuser";
 
-const Sidebar = ({ onClose, name, role, session }) => (
+const Sidebar = ({ onClose, name, role, session, length }) => (
   <div className="fixed z-[1000] bg-black w-full h-[100vh] bg-opacity-70">
     <div className="top-0 left-0 w-[250px] h-full bg-white text-white z-50">
       <div className="p-4">
@@ -74,7 +75,12 @@ const Sidebar = ({ onClose, name, role, session }) => (
                     Daftar Akun
                   </Link>
                 </li>
-                <li>
+                <li className="relative">
+                  {length > 0 && (
+                    <div className="absolute top-[-12px] right-[-10px] sm:hidden block px-2 text-sm bg-red-500 text-white rounded-full">
+                      {length}
+                    </div>
+                  )}
                   <Link
                     href="/pendaftar-baru"
                     className="text-black"
@@ -107,10 +113,11 @@ const Header = () => {
   const { data: session } = useSession();
   const [openSidebar, setOpenSidebar] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const lengthUser = useLengthUserFalse();
 
   const toggleSidebar = () => setOpenSidebar(!openSidebar);
 
-  // Use useEffect to detect session changes
+  // Handle session changes
   useEffect(() => {
     if (session) {
       setIsLoggedIn(true);
@@ -127,6 +134,7 @@ const Header = () => {
           name={session?.user?.name || "Guest"}
           role={session?.user?.role || "User"}
           session={session}
+          length={lengthUser}
         />
       )}
       <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
@@ -136,7 +144,7 @@ const Header = () => {
           </button>
         )}
 
-        <Link href="/dashboard">
+        <Link href="/masuk-data">
           <div className="flex items-center">
             <img
               src="/Logo_PLN_horizontal.png"
@@ -192,7 +200,12 @@ const Header = () => {
                         Daftar Akun
                       </Link>
                     </li>
-                    <li>
+                    <li className="relative">
+                      {lengthUser > 0 && (
+                        <div className="absolute top-[-12px] right-[-10px] sm:block hidden px-2 text-sm bg-red-500 text-white rounded-full">
+                          {lengthUser}
+                        </div>
+                      )}
                       <Link
                         href="/pendaftar-baru"
                         className="border-r border-gray-500 pr-3 text-sm"
@@ -246,6 +259,18 @@ const Header = () => {
       </div>
     </nav>
   );
+};
+
+export const getUsersByIsUserFalse = async () => {
+  try {
+    const users = await Prisma.user.findMany({
+      where: { isUser: false },
+    });
+    return users;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
 export default Header;
