@@ -7,7 +7,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node", // Changed from 'bundler' to 'node'
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -19,7 +19,8 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "target": "ESNext" // Changed from 'ES2017' to 'ESNext'
   },
   "include": [
     "next-env.d.ts",
@@ -27,7 +28,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/print/page.tsx",
-    "components/validasi-pembayaran/ValidasiPembayaran.jsx"
+    "components/validasi-pembayaran/ValidasiPembayaran.jsx",
+    "lib/**/*.ts", // Tambahkan folder lib jika ada
+    "types/**/*.ts" // Tambahkan folder types jika ada
   ],
   "exclude": ["node_modules"]
 }

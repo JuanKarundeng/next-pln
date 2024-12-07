@@ -5,16 +5,25 @@ import { signOut } from "next-auth/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import useLengthUserFalse from "@/lib/lengthuser";
+import { Session } from "next-auth";
 
-const Sidebar = ({ onClose, name, role, session, length }) => (
+interface SidebarProps {
+  onClose: () => void;
+  name: string;
+  role: string;
+  session: Session | null; // Replace any with Session or null if it can be null
+  length: number;
+}
+
+const Sidebar = ({ onClose, name, role, session, length }: SidebarProps) => (
   <div className="fixed z-[1000] bg-black w-full h-[100vh] bg-opacity-70">
     <div className="top-0 left-0 w-[250px] h-full bg-white text-white z-50">
       <div className="p-4">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">
-            <img
+            <Image
               src="/avatar.svg"
               alt="avatar"
               width={64}
@@ -131,8 +140,8 @@ const Header = () => {
       {openSidebar && (
         <Sidebar
           onClose={toggleSidebar}
-          name={session?.user?.name || "Guest"}
-          role={session?.user?.role || "User"}
+          name={session?.user?.name || "Guest"} // Default to "Guest" if no session
+          role={session?.user?.role || "User"} // Default to "User" if no session
           session={session}
           length={lengthUser}
         />
@@ -146,10 +155,12 @@ const Header = () => {
 
         <Link href="/masuk-data">
           <div className="flex items-center">
-            <img
+            <Image
               src="/Logo_PLN_horizontal.png"
               alt="logo"
-              className="h-8 sm:h-[50px]"
+              width={102}
+              height={32}
+              className=" sm:h-[50px]"
             />
           </div>
         </Link>
@@ -222,12 +233,13 @@ const Header = () => {
               <div className="flex gap-3 items-center">
                 <div className="flex flex-col justify-center -space-y-1">
                   <span className="font-semibold text-gray-600 text-right capitalize">
-                    {session.user.name}
+                    {session?.user?.name || "Guest"}{" "}
+                    {/* Fallback to "Guest" if session is null */}
                   </span>
                   <span className="font-xs text-gray-400 text-right capitalize">
-                    {session.user.role === "user"
+                    {session?.user?.role === "user"
                       ? "Pengguna"
-                      : session.user.role === "admin"
+                      : session?.user?.role === "admin"
                       ? "Admin"
                       : ""}
                   </span>
@@ -237,7 +249,7 @@ const Header = () => {
                   className="text-sm ring-2 bg-gray-100 rounded-full"
                 >
                   <Image
-                    src={session.user.image || "/avatar.svg"}
+                    src={session?.user?.image || "/avatar.svg"}
                     alt="avatar"
                     width={64}
                     height={64}
@@ -261,9 +273,11 @@ const Header = () => {
   );
 };
 
+const prisma = new PrismaClient();
+
 export const getUsersByIsUserFalse = async () => {
   try {
-    const users = await Prisma.user.findMany({
+    const users = await prisma.user.findMany({
       where: { isUser: false },
     });
     return users;

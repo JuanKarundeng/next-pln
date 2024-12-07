@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { hashSync } from "bcrypt-ts";
 import { NextApiRequest, NextApiResponse } from "next";
 
+// Example function to fetch users with isUser = false
+
 export const getUsers = async () => {
   const session = await auth();
   if (!session || !session.user || session.user.role !== "admin")
@@ -14,33 +16,6 @@ export const getUsers = async () => {
     return users;
   } catch (error) {
     console.log(error);
-  }
-};
-
-export const getProductByUser = async () => {
-  const session = await auth();
-  if (!session || !session.user) redirect("/dashboard");
-  const role = session.user.role;
-
-  if (role === "admin") {
-    try {
-      const products = await prisma.product.findMany({
-        include: { user: { select: { name: true } } },
-      });
-      return products;
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    try {
-      const products = await prisma.product.findMany({
-        where: { userId: session.user.id },
-        include: { user: { select: { name: true } } },
-      });
-      return products;
-    } catch (error) {
-      console.log(error);
-    }
   }
 };
 
@@ -59,15 +34,42 @@ export const getUsersByIsUserTrue = async () => {
   }
 };
 
-export const getUsersByIsUserFalse = async () => {
+export interface User {
+  id: string;
+  name: string | null;
+  email: string | null;
+  role: string;
+  image: string | null;
+  isUser: boolean | null;
+  emailVerified: Date | null;
+  password: string | null;
+}
+
+export const getUsersByIsUserFalse = async (): Promise<User[]> => {
+  const session = await auth();
+  if (!session || !session.user || session.user.role !== "admin") {
+    redirect("/dashboard");
+  }
+
   try {
     const users = await prisma.user.findMany({
       where: { isUser: false },
     });
 
-    return users;
+    // Pastikan hasil cocok dengan tipe User
+    return users.map((user) => ({
+      id: user.id,
+      name: user.name || null,
+      email: user.email || null,
+      role: user.role,
+      image: user.image || null,
+      isUser: user.isUser || null,
+      emailVerified: user.emailVerified || null,
+      password: user.password || null,
+    }));
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return [];
   }
 };
 

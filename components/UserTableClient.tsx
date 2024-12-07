@@ -2,14 +2,25 @@
 
 import { resetPassword, TolakUser } from "@/lib/actions";
 
-const UserTableClient = ({ users }) => {
-  const handleDeleteUser = async (userId) => {
+interface User {
+  id: string;
+  name: string | null;
+  email: string | null;
+  role: string;
+  image: string | null;
+  isUser: boolean | null;
+  emailVerified: Date | null;
+  password: string | null;
+}
+
+const UserTableClient = ({ users }: { users: User[] }) => {
+  const handleDeleteUser = async (userId: string) => {
     const response = await TolakUser(userId); // Memanggil fungsi deleteUser
     alert(response.message); // Menampilkan pesan hasil
     window.location.reload(); // Memuat ulang halaman
   };
 
-  const handleResetPassword = async (idUser) => {
+  const handleResetPassword = async (idUser: string) => {
     try {
       const response = await resetPassword(idUser); // Memanggil fungsi resetPassword dengan userId
       alert(response.message); // Menampilkan pesan hasil
@@ -26,9 +37,9 @@ const UserTableClient = ({ users }) => {
           <thead className="border-b border-gray-100">
             <tr>
               <th className="py-3 px-6 text-left text-sm">Nama</th>
-              <th className="py-3 px-6 text-center text-sm">Alamat Surel</th>
-              <th className="py-3 px-6 text-center text-sm">Peran</th>
-              <th className="py-3 px-6 text-center text-sm">Aksi</th>
+              <th className="py-3 px-6 text-left text-sm">Alamat Surel</th>
+              <th className="py-3 px-6 text-left text-sm">Peran</th>
+              <th className="py-3 px-6 text-left text-sm">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +56,7 @@ const UserTableClient = ({ users }) => {
                 </td>
                 <td className="py-3 px-6 flex gap-2">
                   <button
-                    onClick={() => handleResetPassword(user.id)} // Pastikan idUser diteruskan
+                    onClick={() => handleResetPassword(user.id)}
                     className="bg-green-500 text-white py-1 text-sm sm:text-md px-3 rounded hover:bg-green-600"
                   >
                     Atur Ulang Kata Sandi

@@ -1,8 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Config from "@/lib/config";
+import Image from "next/image";
 
 const MasukData = () => {
   const [bagian, setBagian] = useState("");
@@ -23,9 +24,8 @@ const MasukData = () => {
   const [preview_km_awal, setPreview_km_awal] = useState<string | null>(null);
   const [preview_km_akhir, setPreview_km_akhir] = useState<string | null>(null);
 
-  const [openModal, setOpenModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const plat = `${kar1}${" "}${kar2}${" "}${kar3}`;
 
@@ -80,7 +80,7 @@ const MasukData = () => {
       !foto_km_akhir
     ) {
       setModalMessage("Semua data harus diisi!");
-      setIsSuccess(false);
+
       setOpenModal(true);
       return;
     }
@@ -104,7 +104,7 @@ const MasukData = () => {
         await axios.post(`${Config.ipPUBLIC}/masuk-data`, formData, {});
         setModalMessage("Data berhasil ditambahkan!");
       }
-      setIsSuccess(true);
+
       setOpenModal(true);
       resetForm();
       setTimeout(() => {
@@ -113,7 +113,7 @@ const MasukData = () => {
     } catch (error) {
       console.error(error);
       setModalMessage("Gagal menambahkan data!");
-      setIsSuccess(false);
+
       setOpenModal(true);
     }
   };
@@ -308,10 +308,12 @@ const MasukData = () => {
                     className="hidden"
                   />
                   {preview_nota && (
-                    <img
+                    <Image
                       src={preview_nota}
                       alt="Preview Nota"
-                      className="mt-4 h-40 w-40 object-cover border border-gray-300 rounded-md"
+                      className="mt-4  object-cover border border-gray-300 rounded-md"
+                      width={160}
+                      height={160}
                     />
                   )}
                 </div>
@@ -339,10 +341,12 @@ const MasukData = () => {
                     className="hidden"
                   />
                   {preview_km_awal && (
-                    <img
+                    <Image
                       src={preview_km_awal}
                       alt="Preview KM Awal"
-                      className="mt-4 h-40 w-40 object-cover border border-gray-300 rounded-md"
+                      width={160}
+                      height={160}
+                      className="mt-4  object-cover border border-gray-300 rounded-md"
                     />
                   )}
                 </div>
@@ -370,10 +374,12 @@ const MasukData = () => {
                     className="hidden"
                   />
                   {preview_km_akhir && (
-                    <img
+                    <Image
                       src={preview_km_akhir}
                       alt="Preview KM Akhir"
-                      className="mt-4 h-40 w-40 object-cover border border-gray-300 rounded-md"
+                      width={160}
+                      height={160}
+                      className="mt-4 object-cover border border-gray-300 rounded-md"
                     />
                   )}
                 </div>

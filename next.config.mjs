@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+// next.config.mjs (use export default for ES module)
+export default {
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -12,10 +13,8 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "http://217.15.171.240:4000",
+        hostname: "217.15.171.240",
       },
     ],
   },
 };
-
-export default nextConfig;

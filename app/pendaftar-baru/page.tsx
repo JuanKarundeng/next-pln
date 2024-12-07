@@ -1,13 +1,7 @@
-import UserNewTable from "@/components/akun-baru";
+import UserNewTableClient from "@/components/UserNewTableClient";
 
-const DaftarAkunPage = () => {
-  return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="max-w-screen-md mx-auto py-10">
-        <UserNewTable />
-      </div>
-    </div>
-  );
+const PendaftarBaruPage = async () => {
+  return <UserNewTableClient />;
 };
 
-export default DaftarAkunPage;
+export default PendaftarBaruPage;

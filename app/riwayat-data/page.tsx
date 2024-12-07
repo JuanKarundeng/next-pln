@@ -6,8 +6,22 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
+// Define the type for each item in masukData
+interface MasukData {
+  id: string;
+  bagian: string;
+  plat: string;
+  km_awal: number;
+  km_akhir: number;
+  jumlah_cc: number;
+  jenis_bensin: string;
+  keterangan: string;
+  createdAt: string; // Assuming `createdAt` is a string (ISO format date)
+}
+
 const RiwayatData = () => {
-  const [masukData, setMasukData] = useState([]);
+  // Set the state to be an array of MasukData objects
+  const [masukData, setMasukData] = useState<MasukData[]>([]);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
   ); // Default ke tanggal hari ini
@@ -26,21 +40,18 @@ const RiwayatData = () => {
   }, []);
 
   // Fungsi untuk memfilter data berdasarkan tanggal
-  const filterDataByDate = () => {
-    if (!selectedDate) return masukData;
-
-    const formattedSelectedDate = new Date(selectedDate)
-      .toISOString()
-      .split("T")[0];
-
-    return masukData.filter((item) => {
+  const filterDataByDate = (data: MasukData[], date: string) => {
+    const formattedSelectedDate = new Date(date).toISOString().split("T")[0];
+    return data.filter((item) => {
       const itemDate = new Date(item.createdAt).toISOString().split("T")[0];
       return itemDate === formattedSelectedDate;
     });
   };
 
+  const filteredData = filterDataByDate(masukData, selectedDate);
+
   return (
-    <div className="w-full px-2  sm:px-32 py-10">
+    <div className="w-full px-2 sm:px-32 py-10">
       <div className="mt-10 sm:mt-20">
         <input
           type="date"
@@ -66,9 +77,9 @@ const RiwayatData = () => {
               </tr>
             </thead>
             <tbody>
-              {filterDataByDate().length > 0 ? (
-                filterDataByDate().map((item, index) => (
-                  <tr key={index + 1}>
+              {filteredData.length > 0 ? (
+                filteredData.map((item, index) => (
+                  <tr key={index}>
                     <td className="border border-black px-6 py-4">
                       {item.bagian}
                     </td>
@@ -119,7 +130,6 @@ const RiwayatData = () => {
           </table>
         </div>
       </div>
-      {/* Input date untuk memilih tanggal */}
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "@/auth";
 
+// Update the Session interface to make 'name' optional
 interface Session {
   user: {
-    name: string;
+    name?: string | null; // Make name optional
     email: string;
     image: string | null;
     role: string;
@@ -36,8 +37,12 @@ export const SessionProvider = ({
 
   useEffect(() => {
     const getSession = async () => {
-      const sessionData = await auth(); // Memanggil auth untuk mendapatkan data session
-      setSession(sessionData);
+      try {
+        const sessionData = await auth(); // Get session data
+        setSession(sessionData as Session); // Cast to Session type
+      } catch (error) {
+        console.error("Failed to get session:", error);
+      }
     };
 
     getSession();

@@ -3,16 +3,16 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ubahSandi } from "@/lib/actions";
-import { auth } from "@/auth";
 import { getSession } from "next-auth/react";
 
 const UbahKataSandi = () => {
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validasi apakah kata sandi dan konfirmasi kata sandi cocok
@@ -32,6 +32,7 @@ const UbahKataSandi = () => {
     }
 
     // Memanggil fungsi ubahSandi
+    setLoading(true); // Set loading to true when submitting
     try {
       const response = await ubahSandi(userId, newPassword);
       if (response.message === "Kata sandi berhasil diubah.") {
@@ -40,8 +41,10 @@ const UbahKataSandi = () => {
       } else {
         setErrorMessage(response.message);
       }
-    } catch (error) {
+    } catch {
       setErrorMessage("Terjadi kesalahan pada server.");
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -92,8 +95,9 @@ const UbahKataSandi = () => {
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600"
+                disabled={loading}
               >
-                Ubah Kata Sandi
+                {loading ? "Memproses..." : "Ubah Kata Sandi"}
               </button>
             </form>
           </motion.div>

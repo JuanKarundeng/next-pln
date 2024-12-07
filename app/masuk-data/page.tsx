@@ -1,4 +1,3 @@
-import Galeri from "@/components/Galeri";
 import MasukData from "@/components/MasukData/MasukData";
 
 const MasukDataPage = () => {

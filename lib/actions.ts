@@ -5,8 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
-import { getSession } from "next-auth/react";
 
+// Sign up Credentials action
 export const signUpCredentials = async (
   prevState: unknown,
   formData: FormData
@@ -33,12 +33,13 @@ export const signUpCredentials = async (
       },
     });
   } catch (error) {
-    console.log(error);
-    return { message: "Gagal Mendaftar" };
+    console.error("Error creating user:", error); // Log the error for debugging
+    return { message: "Failed to create user" }; // Optional message to return
   }
   redirect("/login");
 };
 
+// Sign in Credential action
 // Sign in Credential action
 export const signInCredentials = async (
   prevState: unknown,
@@ -62,33 +63,39 @@ export const signInCredentials = async (
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { message: "Alamat Surel atau Kata Sandi Salah" };
+          return { message: "Invalid Credentials." };
         default:
-          return { message: "Gagal Masuk" };
+          return { message: "Something went wrong." };
       }
     }
     throw error;
   }
 };
 
-export const TolakUser = async (userId) => {
+// Reject user action (delete user)
+export const TolakUser = async (
+  userId: string
+): Promise<{ message: string }> => {
   try {
     const deletedUser = await prisma.user.delete({
       where: { id: userId },
     });
 
     if (deletedUser) {
-      return { message: "Pengguna Berhasil Dihapus" };
+      return { message: "User successfully deleted" };
     } else {
-      return { message: "Penggguna Tidak Ditemukan" };
+      return { message: "User not found" };
     }
   } catch (error) {
-    console.error("Failed to delete user:", error);
-    return { message: "Pengguna Gagal Dihapus" };
+    console.error("Failed to delete user:", error); // Log the error
+    return { message: "Failed to delete user" }; // Optional message
   }
 };
 
-export const updateUserStatus = async (userId) => {
+// Update user status action
+export const updateUserStatus = async (
+  userId: string
+): Promise<{ message: string }> => {
   try {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -101,55 +108,64 @@ export const updateUserStatus = async (userId) => {
       return { message: "User not found." };
     }
   } catch (error) {
-    console.error("Failed to update user status:", error);
+    console.error("Failed to update user status:", error); // Log the error
     return { message: "Failed to update user status." };
   }
 };
 
-export const resetPassword = async (userId) => {
+// Reset password action
+export const resetPassword = async (
+  userId: string
+): Promise<{ message: string }> => {
   try {
-    const defaultPassword = "12345678"; // Password default
-    const hashedPassword = hashSync(defaultPassword, 10); // Hash password default
+    const defaultPassword = "12345678"; // Default password
+    const hashedPassword = hashSync(defaultPassword, 10); // Hash default password
 
-    // Update password di database
+    // Update password in the database
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { password: hashedPassword }, // Update password yang sudah di-hash
+      data: { password: hashedPassword }, // Update hashed password
     });
 
     if (updatedUser) {
-      return { message: "Kata Sandi Sudah Diatur ke 12345678" };
+      return { message: "Password has been reset to 12345678" };
     } else {
-      return { message: "Pengguna tidak Ditemukan" };
+      return { message: "User not found" };
     }
   } catch (error) {
-    return { message: "Kata Sandi Gagal Diatur Ulang" };
+    console.error("Failed to reset password:", error); // Log the error
+    return { message: "Password reset failed" }; // Optional message
   }
 };
 
-export const ubahSandi = async (userId, newPassword) => {
-  // Validasi jika password baru tidak diberikan
+// Change password action
+export const ubahSandi = async (
+  userId: string,
+  newPassword: string
+): Promise<{ message: string }> => {
+  // Validate if new password is not provided
   if (!newPassword) {
-    return { message: "Password baru harus diisi." };
+    return { message: "New password must be provided." };
   }
 
   try {
-    // Hash password baru
+    // Hash the new password
     const hashedPassword = hashSync(newPassword, 10);
 
-    // Update password di database
+    // Update password in the database
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { password: hashedPassword },
     });
 
-    // Cek apakah password berhasil diubah
+    // Check if the password update was successful
     if (updatedUser) {
-      return { message: "Kata sandi berhasil diubah." };
+      return { message: "Password successfully updated." };
     } else {
-      return { message: "Pengguna tidak ditemukan." };
+      return { message: "User not found." };
     }
   } catch (error) {
-    return { message: "Terjadi kesalahan saat mengubah kata sandi." };
+    console.error("Error changing password:", error); // Log the error
+    return { message: "An error occurred while changing the password." };
   }
 };

@@ -1,13 +1,26 @@
-import UserTable from "@/components/user-table";
+import { getUsersByIsUserTrue } from "@/lib/data";
+import UserTableClient from "../../components/UserTableClient"; // Mengimpor komponen client
 
-const DaftarAkunPage = () => {
-  return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="max-w-screen-md mx-auto py-10">
-        <UserTable />
-      </div>
-    </div>
-  );
+/// Mendefinisikan tipe data User yang lebih fleksibel untuk menerima nilai null
+interface User {
+  id: string;
+  name: string | null; // name bisa null
+  email: string | null; // email bisa null
+  role: string; // role tetap bertipe string
+  image: string | null; // image bisa null
+  isUser: boolean | null; // isUser bisa null
+  emailVerified: Date | null; // emailVerified bisa null
+  password: string | null; // password bisa null
+}
+
+const DaftarAkunPage = async () => {
+  // Menangani nilai undefined dengan memberikan array kosong sebagai default
+  const users: User[] = (await getUsersByIsUserTrue()) ?? [];
+
+  if (!users.length) return <h1 className="text-2xl">No User Found</h1>;
+
+  // Mengirim data pengguna ke komponen client dengan tipe yang sesuai
+  return <UserTableClient users={users} />;
 };
 
 export default DaftarAkunPage;

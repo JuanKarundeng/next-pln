@@ -3,11 +3,22 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Config from "@/lib/config";
-import Print from "@/app/print/page";
+import Print from "./Print";
 import { tanggalFormat } from "@/utils/helper";
 
+type MasukData = {
+  validasi: string;
+  createdAt: string;
+  bagian: string;
+  plat: string;
+  km_awal: number;
+  km_akhir: number;
+  pembayaran: number;
+  harga_disetujui: number;
+};
+
 const ValidasiPembayaran = () => {
-  const [masukData, setMasukData] = useState([]);
+  const [masukData, setMasukData] = useState<MasukData[]>([]);
   const [openModalPDF, setOpenModalPDF] = useState(false);
   const [namaTTD, setNamaTTD] = useState("");
   const [selectedDate, setSelectedDate] = useState(
@@ -15,11 +26,13 @@ const ValidasiPembayaran = () => {
   );
   const [printVisible, setPrintVisible] = useState(false);
   const [isTableVisible, setIsTableVisible] = useState(true); // Menambahkan state untuk kontrol visibilitas tabel
-  const ComponentToPDF = useRef();
+  const ComponentToPDF = useRef<HTMLDivElement | null>(null); //
 
-  const getMasukData = async (date) => {
+  const getMasukData = async (date: string) => {
     try {
-      const response = await axios.get(`${Config.ipPUBLIC}/masuk-data`);
+      const response = await axios.get<MasukData[]>(
+        `${Config.ipPUBLIC}/masuk-data`
+      );
       const filteredData = response.data.filter(
         (item) => item.validasi === "sudah" && item.createdAt.startsWith(date)
       );
@@ -35,11 +48,11 @@ const ValidasiPembayaran = () => {
     }
   }, [selectedDate]);
 
-  const handleDateChange = (e) => {
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(e.target.value);
   };
 
-  const hargaRP = (number) => {
+  const hargaRP = (number: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",

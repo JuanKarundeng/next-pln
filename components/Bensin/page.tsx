@@ -5,17 +5,22 @@ import Config from "@/lib/config";
 import React, { useEffect, useState } from "react";
 
 const Bensin = () => {
-  const [bensinData, setBensinData] = useState({});
+  const [bensinData, setBensinData] = useState<Record<string, string>>({}); // State untuk data bensin
   const [loading, setLoading] = useState(true); // For loading state
-  const [error, setError] = useState(null); // For error handling
-  const [newPrices, setNewPrices] = useState({}); // State untuk menyimpan harga baru
+  const [error, setError] = useState<string | null>(null); // For error handling
+  const [newPrices, setNewPrices] = useState<Record<string, string>>({}); // State untuk menyimpan harga baru
 
   // Fungsi untuk mengambil data bensin
   const getBensin = async () => {
     try {
       const response = await axios.get(`${Config.ipPUBLIC}/ubah-harga`);
-      // Mengambil objek pertama dari array
-      setBensinData(response.data[0]);
+      // Pastikan response.data adalah array dan kita mengambil objek pertama
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        setBensinData(response.data[0]);
+      } else {
+        setBensinData({});
+        setError("Data tidak ditemukan");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       setError("Failed to load data");
@@ -24,16 +29,17 @@ const Bensin = () => {
     }
   };
 
-  console.log(bensinData);
-
   // Fungsi untuk menangani pembaruan harga bensin
-  const updateBensin = async (fuelType) => {
+  const updateBensin = async (fuelType: string) => {
+    // Explicitly defining fuelType as string
     try {
       const price = newPrices[fuelType]; // Ambil harga baru untuk jenis bensin ini
-      await axios.put(`${Config.ipPUBLIC}/ubah-harga/1`, {
-        [fuelType]: price, // Mengirimkan harga baru untuk jenis bensin ini
-      });
-      await getBensin(); // Re-fetch the data after update
+      if (price) {
+        await axios.put(`${Config.ipPUBLIC}/ubah-harga/1`, {
+          [fuelType]: price, // Mengirimkan harga baru untuk jenis bensin ini
+        });
+        await getBensin(); // Re-fetch the data after update
+      }
     } catch (error) {
       console.error("Error updating price:", error);
       setError("Failed to update price");
