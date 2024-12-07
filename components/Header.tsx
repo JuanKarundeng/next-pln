@@ -123,7 +123,6 @@ const Header = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const lengthUser = useLengthUserFalse();
-
   const toggleSidebar = () => setOpenSidebar(!openSidebar);
 
   // Handle session changes

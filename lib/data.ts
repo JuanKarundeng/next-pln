@@ -34,42 +34,25 @@ export const getUsersByIsUserTrue = async () => {
   }
 };
 
-export interface User {
-  id: string;
-  name: string | null;
-  email: string | null;
-  role: string;
-  image: string | null;
-  isUser: boolean | null;
-  emailVerified: Date | null;
-  password: string | null;
-}
-
-export const getUsersByIsUserFalse = async (): Promise<User[]> => {
-  const session = await auth();
-  if (!session || !session.user || session.user.role !== "admin") {
-    redirect("/dashboard");
-  }
-
+export const getUsersByIsUserFalse = async () => {
   try {
+    // Mendapatkan session pengguna
+    const session = await auth();
+    // Memeriksa apakah session valid dan pengguna adalah admin
+    if (!session || !session.user || session.user.role !== "admin") {
+      redirect("/dashboard"); // Jika tidak, arahkan ke halaman dashboard
+    }
+
+    // Mengambil data pengguna dengan isUser = false
     const users = await prisma.user.findMany({
-      where: { isUser: false },
+      where: { isUser: false }, // Filter berdasarkan status isUser false
     });
 
-    // Pastikan hasil cocok dengan tipe User
-    return users.map((user) => ({
-      id: user.id,
-      name: user.name || null,
-      email: user.email || null,
-      role: user.role,
-      image: user.image || null,
-      isUser: user.isUser || null,
-      emailVerified: user.emailVerified || null,
-      password: user.password || null,
-    }));
+    // Mengembalikan data pengguna
+    return users;
   } catch (error) {
-    console.error(error);
-    return [];
+    console.log("Error mengambil data pengguna:", error); // Menangani error jika ada
+    return []; // Mengembalikan array kosong jika terjadi error
   }
 };
 
