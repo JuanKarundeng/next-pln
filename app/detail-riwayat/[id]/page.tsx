@@ -5,8 +5,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Config from "@/lib/config";
 import { useSession } from "next-auth/react";
-import { config } from "process";
-import { url } from "inspector";
 
 // Define types for data
 interface MasukData {
