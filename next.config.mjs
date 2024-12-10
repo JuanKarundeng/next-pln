@@ -12,8 +12,8 @@ export default {
         hostname: "avatars.githubusercontent.com",
       },
       {
-        protocol: "http",
-        hostname: "217.15.171.240",
+        protocol: "https",
+        hostname: "admin.monitoring-fuel-pln.com",
       },
     ],
   },
