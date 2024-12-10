@@ -5,6 +5,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Config from "@/lib/config";
 import { useSession } from "next-auth/react";
+import { config } from "process";
+import { url } from "inspector";
 
 // Define types for data
 interface MasukData {
@@ -91,7 +93,7 @@ const Page = () => {
               <div>
                 <p className="mb-4">Kilometer Awal (KM)</p>
                 <a
-                  href={masukData.url_km_awal}
+                  href={`${Config.ipPUBLIC}/img/${masukData.url_km_awal}`}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md mt-10"
                 >
                   Lihat Foto Kilometer Awal
@@ -100,7 +102,7 @@ const Page = () => {
               <div>
                 <p className="my-4">Kilometer Akhir (KM)</p>
                 <a
-                  href={masukData.url_km_akhir}
+                  href={`${Config.ipPUBLIC}/img/${masukData.url_km_akhir}`}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md"
                 >
                   Lihat Foto Kilometer Akhir
@@ -109,7 +111,7 @@ const Page = () => {
               <div>
                 <p className="my-4">Bukti Pembayaran (Rp)</p>
                 <a
-                  href={masukData.url_nota}
+                  href={`${Config.ipPUBLIC}/img/${masukData.url_nota}`}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md"
                 >
                   Lihat Foto Pembayaran
