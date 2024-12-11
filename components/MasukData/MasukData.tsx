@@ -85,6 +85,13 @@ const MasukData = () => {
       return;
     }
 
+    // Validasi Kilometer Awal dan Kilometer Akhir
+    if (parseFloat(km_akhir) <= parseFloat(km_awal)) {
+      setModalMessage("Km Akhir Harus Lebih Besar Dari Km Awal");
+      setOpenModal(true);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("bagian", bagian);
     formData.append("plat", plat);
@@ -93,29 +100,23 @@ const MasukData = () => {
     formData.append("jumlah_cc", jumlah_cc);
     formData.append("jenis_bensin", jenis_bensin);
     formData.append("pembayaran", pembayaran);
-    formData.append("foto_nota", foto_nota as Blob);
-    formData.append("foto_km_awal", foto_km_awal as Blob);
-    formData.append("foto_km_akhir", foto_km_akhir as Blob);
+    formData.append("foto_nota", foto_nota);
+    formData.append("foto_km_awal", foto_km_awal);
+    formData.append("foto_km_akhir", foto_km_akhir);
 
     try {
-      if (km_akhir <= km_awal) {
-        setModalMessage("Km Akhir Harus Lebih Besar Dari Km Awal");
-      } else {
-        await axios.post(`${Config.ipPUBLIC}/masuk-data`, formData, {});
-        setModalMessage("Data berhasil ditambahkan!");
-      }
-
-      setOpenModal(true);
+      await axios.post(`${Config.ipPUBLIC}/masuk-data`, formData, {});
+      setModalMessage("Data berhasil ditambahkan!");
       resetForm();
-      setTimeout(() => {
-        setOpenModal(false);
-      }, 3000);
     } catch (error) {
       console.error(error);
       setModalMessage("Gagal menambahkan data!");
-
-      setOpenModal(true);
     }
+
+    setOpenModal(true);
+    setTimeout(() => {
+      setOpenModal(false);
+    }, 3000);
   };
 
   const [hasMounted, setHasMounted] = React.useState(false);
