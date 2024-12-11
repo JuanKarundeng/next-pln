@@ -35,10 +35,7 @@ const Print = React.forwardRef<HTMLDivElement, PrintProps>(
     const { dataGet, tgl, namaTTD } = props;
 
     return (
-      <div
-        ref={ref}
-        className="sm:p-10 p-1 w-full relative h-[100vh] print-pdf"
-      >
+      <div ref={ref} className="sm:p-10 p-1 w-full relative print-pdf">
         {/* Header Section */}
         <div className="border-b-2 border-black w-full flex relative pb-8 items-center">
           <Image
@@ -114,16 +111,20 @@ const Print = React.forwardRef<HTMLDivElement, PrintProps>(
             </table>
           </div>
         </div>
-
-        {/* Signature Section */}
-        <div className="flex justify-end mt-2 absolute ">
-          <div className="text-center">
-            <h1 className="sm:text-lg text-sm">Manado, {tanggalFormat(tgl)}</h1>
-            <h1 className="mt-20 sm:text-lg text-sm border-b-2 pb-2 border-black">
-              {namaTTD}
-            </h1>
+        <div className="relative flex w-full justify-end">
+          <div className="flex  mt-2 ">
+            <div className="text-center">
+              <h1 className="sm:text-md text-sm">
+                Manado, {tanggalFormat(tgl)}
+              </h1>
+              <h1 className="mt-20 sm:text-md text-sm border-b-2 pb-2 border-black">
+                {namaTTD}
+              </h1>
+            </div>
           </div>
         </div>
+
+        {/* Signature Section */}
       </div>
     );
   }
