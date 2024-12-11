@@ -8,9 +8,9 @@ import { useSession } from "next-auth/react";
 
 // Define types for data
 interface MasukData {
-  url_km_awal: string;
-  url_km_akhir: string;
-  url_nota: string;
+  foto_km_awal: string;
+  foto_km_akhir: string;
+  foto_nota: string;
   pembayaran: number;
   harga_diharapkan: string;
   harga_disetujui?: string | number;
@@ -91,7 +91,7 @@ const Page = () => {
               <div>
                 <p className="mb-4">Kilometer Awal (KM)</p>
                 <a
-                  href={`${Config.ipPUBLIC}/img/${masukData.url_km_awal}`}
+                  href={`${Config.ipPUBLIC}/img/${masukData.foto_km_awal}`}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md mt-10"
                 >
                   Lihat Foto Kilometer Awal
@@ -100,7 +100,7 @@ const Page = () => {
               <div>
                 <p className="my-4">Kilometer Akhir (KM)</p>
                 <a
-                  href={`${Config.ipPUBLIC}/img/${masukData.url_km_akhir}`}
+                  href={`${Config.ipPUBLIC}/img/${masukData.foto_km_akhir}`}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md"
                 >
                   Lihat Foto Kilometer Akhir
@@ -109,7 +109,7 @@ const Page = () => {
               <div>
                 <p className="my-4">Bukti Pembayaran (Rp)</p>
                 <a
-                  href={`${Config.ipPUBLIC}/img/${masukData.url_nota}`}
+                  href={`${Config.ipPUBLIC}/img/${masukData.foto_nota}`}
                   className="bg-gray-300 px-4 w-[30rem] sm:w-0 py-2 rounded-md"
                 >
                   Lihat Foto Pembayaran
