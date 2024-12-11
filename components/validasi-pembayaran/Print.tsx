@@ -116,7 +116,7 @@ const Print = React.forwardRef<HTMLDivElement, PrintProps>(
         </div>
 
         {/* Signature Section */}
-        <div className="flex justify-end absolute bottom-4 right-6">
+        <div className="flex justify-end mt-2 absolute ">
           <div className="text-center">
             <h1 className="sm:text-lg text-sm">Manado, {tanggalFormat(tgl)}</h1>
             <h1 className="mt-20 sm:text-lg text-sm border-b-2 pb-2 border-black">
